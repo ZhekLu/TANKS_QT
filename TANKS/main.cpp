@@ -1,11 +1,11 @@
-#include "tankswindow.h"
-
+//#include "squareparody.h"
+#include "mainscene.h"
 #include <QApplication>
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    TanksWindow w;
+    MainScene w;
     w.resize(700, 650);
     w.show();
     return a.exec();
