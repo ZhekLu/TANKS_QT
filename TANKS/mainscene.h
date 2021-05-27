@@ -7,7 +7,7 @@
 #include <QGraphicsItem> //hz
 #include <QTimer>
 #include <QHBoxLayout>
-
+#include <QKeyEvent>
 #include <QGraphicsRectItem>
 #include <QDebug>
 
@@ -18,14 +18,15 @@ class MainScene : public QWidget
     Q_OBJECT
 public:
     MainScene(QWidget *parent = nullptr);
+    Tank *tank;
+private:
     QHBoxLayout* sceneLayout;
     QGraphicsView* sceneWidget;
     QGraphicsScene* scene;
     QTimer* tankTimer;
-
-    Tank *tank;
+    void keyPressEvent(QKeyEvent*) override;
 private slots:
-//   void tankTimerSlot();
+   void tankTimerSlot();
 
 };
 
