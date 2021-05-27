@@ -1,4 +1,4 @@
-#include "tankswindow.h"
+#include "squareparody.h"
 
 TanksWindow::TanksWindow(QWidget *parent)
     : QWidget(parent)
@@ -25,8 +25,8 @@ myGraphicsView::myGraphicsView(QWidget *parent) : QGraphicsView(parent)
     connect(myRectTimer, SIGNAL(timeout()), this, SLOT(myTimerRect()));
 
     rectItem = new QGraphicsRectItem(0, 0, 60, 60);
-    rectItem->setPen(QPen(Qt::green, 2, Qt::SolidLine, Qt::FlatCap, Qt::RoundJoin));
-    rectItem->setBrush(Qt::yellow);
+    rectItem->setPen(QPen(Qt::black, 2, Qt::SolidLine, Qt::FlatCap, Qt::RoundJoin));
+    rectItem->setBrush(Qt::gray);
     rectItem->setPos(0, 500);
     personaj();
     scene->addItem(rectItem);

@@ -1,5 +1,5 @@
-#ifndef TANKSWINDOW_H
-#define TANKSWINDOW_H
+#ifndef SQUAREPARODY_H
+#define SQUAREPARODY_H
 
 #include <QWidget>
 #include <QGraphicsView>
@@ -38,4 +38,4 @@ private:
     QHBoxLayout* myLayoutScene;
     myGraphicsView* myGraphics;
 };
-#endif // TANKSWINDOW_H
+#endif // SQUAREPARODY_H
