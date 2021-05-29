@@ -3,6 +3,7 @@
 #---------- my ignors------------
 *.pro*
 squareparody.*
+*-non-*
 #-------------
 *~
 *.autosave
