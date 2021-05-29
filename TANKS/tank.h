@@ -28,10 +28,17 @@ public:
     void Rotate(int rot);
     void Shot();
     QPointF bulletStartPos();
+    QPointF UpRightPos() const;
+    QPointF DownLeftPos() const;
     bool CanAttack() const;
+    void setPos(int ax, int ay);
+    void setPos(const QPointF &pos);
+    uint getWidth() const;
+    uint getHeight() const;
+    int getBodyLen() const;
 
 private:
-//    elements
+    //    elements
     QGraphicsRectItem* cannon; //pushka
     QGraphicsRectItem* body;
     QGraphicsScene *parentScene;

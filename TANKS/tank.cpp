@@ -131,6 +131,43 @@ QPointF Tank::bulletStartPos()
     return currBodyPos;
 }
 
+QPointF Tank::UpRightPos() const
+{
+    QPointF currBodyPos = body->pos();
+    switch (rotation)
+    {
+    case Rotation::LEFT:
+        currBodyPos.rx() -= 1 * CELL;
+        break;
+    case Rotation::UP:
+        currBodyPos.ry() -= 1 * CELL;
+        break;
+    }
+    return currBodyPos;
+}
+
+QPointF Tank::DownLeftPos() const
+{
+    QPointF currBodyPos = body->pos();
+    switch (rotation)
+    {
+    case Rotation::LEFT:
+    case Rotation::UP:
+        currBodyPos.rx() += bodyLen;
+        currBodyPos.ry() += bodyLen;
+        break;
+    case Rotation::RIGHT:
+        currBodyPos.rx() += bodyLen + 1 * CELL;
+        currBodyPos.ry() += bodyLen;
+        break;
+    case Rotation::DOWN:
+        currBodyPos.rx() += bodyLen;
+        currBodyPos.ry() += bodyLen + 1 * CELL;
+        break;
+    }
+    return currBodyPos;
+}
+
 bool Tank::CanAttack() const
 {
     return canAttack;
@@ -140,3 +177,29 @@ void Tank::UpdateAttack()
 {
     canAttack = true;
 }
+
+void Tank::setPos(int ax, int ay)
+{
+    body->setPos(ax, ay);
+}
+
+void Tank::setPos(const QPointF &pos)
+{
+    body->setPos(pos);
+}
+
+uint Tank::getWidth() const
+{
+    return (this->DownLeftPos().rx() - this->UpRightPos().rx());
+}
+
+uint Tank::getHeight() const
+{
+    return (this->DownLeftPos().ry() - this->UpRightPos().ry());
+}
+
+int Tank::getBodyLen() const
+{
+    return bodyLen;
+}
+

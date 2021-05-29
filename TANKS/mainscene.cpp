@@ -89,7 +89,14 @@ void MainScene::updateBulletsCollision()
 
 void MainScene::updateTanksCollision()
 {
-
+    if(tank->DownLeftPos().rx() > WIDTH)
+        tank->setPos(WIDTH - tank->getWidth(), tank->UpRightPos().ry());
+    if(tank->DownLeftPos().ry() > HEIGHT)
+        tank->setPos(tank->UpRightPos().rx(), HEIGHT - tank->getHeight());
+    if(tank->UpRightPos().rx() < 0)
+        tank->setPos(0 + tank->getWidth() - tank->getBodyLen(), tank->UpRightPos().ry());
+    if(tank->UpRightPos().ry() < 0)
+        tank->setPos(tank->UpRightPos().rx(), 0 + tank->getHeight() - tank->getBodyLen());
 }
 
 void MainScene::updateTimerSlot()
