@@ -25,6 +25,7 @@ private:
     QGraphicsScene* scene;
     QTimer* tankTimer;
     void keyPressEvent(QKeyEvent*) override;
+//    void keyReleaseEvent(QKeyEvent*) override;
 private slots:
    void tankTimerSlot();
 

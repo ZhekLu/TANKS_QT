@@ -1,9 +1,15 @@
 #include "tank.h"
 
 
+Tank::~Tank()
+{
+    qDebug() << "destruct is come";
+}
+
 Tank::Tank(int x, int y, QGraphicsScene *scene, int rotation, QWidget *parent) : QWidget(parent)
 {
     bodyLen = CELL * 3;
+    parentScene = scene;
     this->rotation = rotation;
     Rotate(rotation);
 //    body
@@ -17,13 +23,18 @@ Tank::Tank(int x, int y, QGraphicsScene *scene, int rotation, QWidget *parent) :
     cannon->setPen(QPen(Qt::black, 2, Qt::SolidLine, Qt::FlatCap, Qt::RoundJoin));
     cannon->setBrush(Qt::gray);
 //    bullet
-    bullet = new QGraphicsEllipseItem(0, 0, CELL, CELL, cannon);
-    bullet->setPen(QPen(Qt::black));
-    bullet->setBrush(Qt::black);
-    bullet->hide();
+//    bullet = new QGraphicsEllipseItem(0, 0, CELL, CELL, cannon);
+//    bullet->setPen(QPen(Qt::black));
+//    bullet->setBrush(Qt::black);
+//    bullet->hide();
 
     scene->addItem(body);
 }
+
+//int Tank::getRotation() const
+//{
+//    return rotation;
+//}
 
 void Tank::Move(int step)
 {
@@ -77,4 +88,35 @@ void Tank::Rotate(int rot)
         rotation = Rotation::DOWN;
         break;
     }
+}
+
+void Tank::Shot()
+{
+    Bullet* newBul = new Bullet(bulletStartPos(), parentScene, 2, rotation);
+    bullets.push_back(newBul);
+}
+
+QPointF Tank::bulletStartPos()
+{
+    QPointF currBodyPos = body->pos();
+    switch (rotation)
+    {
+    case Rotation::LEFT:
+        currBodyPos.rx() -= 2 * CELL;
+        currBodyPos.ry() += 1 * CELL;
+        break;
+    case Rotation::UP:
+        currBodyPos.rx() += 1 * CELL;
+        currBodyPos.ry() -= 2 * CELL;
+        break;
+    case Rotation::RIGHT:
+        currBodyPos.rx() += bodyLen + 1 * CELL;
+        currBodyPos.ry() += 1 * CELL;
+        break;
+    case Rotation::DOWN:
+        currBodyPos.rx() += 1 * CELL;
+        currBodyPos.ry() += bodyLen + 1 * CELL;
+        break;
+    }
+    return currBodyPos;
 }
