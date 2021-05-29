@@ -18,7 +18,7 @@ Bullet::Bullet(QPointF startpos, QGraphicsScene *scene, int speed, int rotation,
 
 //    timer
     moveTimer = new QTimer(this);
-    moveTimer->start(10);
+    moveTimer->start(5);
     connect(moveTimer, SIGNAL(timeout()), this, SLOT(moveTimerEvent()));
 }
 

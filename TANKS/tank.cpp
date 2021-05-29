@@ -1,17 +1,15 @@
 #include "tank.h"
 
-
-Tank::~Tank()
-{
-    qDebug() << "destruct is come";
-}
-
 Tank::Tank(int x, int y, QGraphicsScene *scene, int rotation, QWidget *parent) : QWidget(parent)
 {
+//    variables
     bodyLen = CELL * 3;
+    canAttack = true;
+
     parentScene = scene;
     this->rotation = rotation;
-    Rotate(rotation);
+    if(rotation != Rotation::DOWN)
+        Rotate(rotation);
 //    body
     body = new QGraphicsRectItem(0, 0, bodyLen, bodyLen);
     body->setPen(QPen(Qt::black, 4, Qt::SolidLine, Qt::FlatCap, Qt::RoundJoin));
@@ -22,13 +20,16 @@ Tank::Tank(int x, int y, QGraphicsScene *scene, int rotation, QWidget *parent) :
     cannon->setPos(CELL, 2 * CELL);
     cannon->setPen(QPen(Qt::black, 2, Qt::SolidLine, Qt::FlatCap, Qt::RoundJoin));
     cannon->setBrush(Qt::gray);
-//    bullet
-//    bullet = new QGraphicsEllipseItem(0, 0, CELL, CELL, cannon);
-//    bullet->setPen(QPen(Qt::black));
-//    bullet->setBrush(Qt::black);
-//    bullet->hide();
-
+//    bulletTimer
+    attackTimer = new QTimer(this);
+    attackTimer->start(1000/0.5);
+    connect(attackTimer, SIGNAL(timeout()), this, SLOT(UpdateAttack()));
     scene->addItem(body);
+}
+
+Tank::~Tank()
+{
+    qDebug() << "destruct is come";
 }
 
 //int Tank::getRotation() const
@@ -92,8 +93,12 @@ void Tank::Rotate(int rot)
 
 void Tank::Shot()
 {
-    Bullet* newBul = new Bullet(bulletStartPos(), parentScene, 2, rotation);
-    bullets.push_back(newBul);
+    if(rotation != Rotation::STOP)
+    {
+        Bullet* newBul = new Bullet(bulletStartPos(), parentScene, 1, rotation);
+        bullets.push_back(newBul);
+        canAttack = false;
+    }
 }
 
 QPointF Tank::bulletStartPos()
@@ -119,4 +124,19 @@ QPointF Tank::bulletStartPos()
         break;
     }
     return currBodyPos;
+}
+
+void Tank::Update()
+{
+    this->UpdateAttack();
+}
+
+bool Tank::CanAttack() const
+{
+    return canAttack;
+}
+
+void Tank::UpdateAttack()
+{
+    canAttack = true;
 }

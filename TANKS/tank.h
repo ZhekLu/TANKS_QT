@@ -22,21 +22,32 @@ public:
     Tank(int x, int y, QGraphicsScene *scene, int rotation = Rotation::STOP, QWidget* parent = nullptr);
 
     QVector<Bullet*> bullets;
-    int rotation;
+
 //    Functions
     void Move(int step = CELL);
     void Rotate(int rot);
     void Shot();
     QPointF bulletStartPos();
+    void Update();
 //    QPointF Pos();
 //    int getRotation() const;
+
+    bool CanAttack() const;
 
 private:
     QGraphicsRectItem* cannon; //pushka
     QGraphicsRectItem* body;
     QGraphicsScene *parentScene;
+//    variables
     int bodyLen;
-//    QTimer* shotTimer;
+    int rotation;
+    bool canAttack;
+    QTimer* attackTimer;
+
+private slots:
+    void UpdateAttack();
+
+
 
 };
 
