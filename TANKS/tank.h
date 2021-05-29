@@ -23,18 +23,15 @@ public:
 
     QVector<Bullet*> bullets;
 
-//    Functions
+//    functions
     void Move(int step = CELL);
     void Rotate(int rot);
     void Shot();
     QPointF bulletStartPos();
-    void Update();
-//    QPointF Pos();
-//    int getRotation() const;
-
     bool CanAttack() const;
 
 private:
+//    elements
     QGraphicsRectItem* cannon; //pushka
     QGraphicsRectItem* body;
     QGraphicsScene *parentScene;
@@ -42,12 +39,11 @@ private:
     int bodyLen;
     int rotation;
     bool canAttack;
+
     QTimer* attackTimer;
 
 private slots:
     void UpdateAttack();
-
-
 
 };
 

@@ -8,6 +8,7 @@ Bullet::Bullet(QPointF startpos, QGraphicsScene *scene, int speed, int rotation,
     this->rotation = rotation;
     parentScene = scene;
     this->speed = speed;
+
 //    body
     body = new QGraphicsEllipseItem(0, 0, size, size);
     body->setPen(QPen(Qt::black));

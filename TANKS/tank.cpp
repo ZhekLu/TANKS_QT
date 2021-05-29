@@ -8,34 +8,43 @@ Tank::Tank(int x, int y, QGraphicsScene *scene, int rotation, QWidget *parent) :
 
     parentScene = scene;
     this->rotation = rotation;
-    if(rotation != Rotation::DOWN)
-        Rotate(rotation);
+
 //    body
     body = new QGraphicsRectItem(0, 0, bodyLen, bodyLen);
     body->setPen(QPen(Qt::black, 4, Qt::SolidLine, Qt::FlatCap, Qt::RoundJoin));
     body->setBrush(Qt::gray);
     body->setPos(x, y);
+    scene->addItem(body);
+
 //    child cannon
     cannon = new QGraphicsRectItem(0, 0, CELL * 1, CELL * 2, body);
     cannon->setPos(CELL, 2 * CELL);
     cannon->setPen(QPen(Qt::black, 2, Qt::SolidLine, Qt::FlatCap, Qt::RoundJoin));
     cannon->setBrush(Qt::gray);
+
+//    rotate
+    if(rotation != Rotation::DOWN)
+        Rotate(rotation);
+
 //    bulletTimer
     attackTimer = new QTimer(this);
     attackTimer->start(1000/0.5);
     connect(attackTimer, SIGNAL(timeout()), this, SLOT(UpdateAttack()));
-    scene->addItem(body);
+
 }
 
 Tank::~Tank()
 {
-    qDebug() << "destruct is come";
+    for(auto *i : bullets)
+    {
+        delete i;
+        bullets.pop_front();
+    }
+    parentScene->removeItem(body);
+    delete body;
+    delete cannon;
+    delete attackTimer;
 }
-
-//int Tank::getRotation() const
-//{
-//    return rotation;
-//}
 
 void Tank::Move(int step)
 {
@@ -64,26 +73,22 @@ void Tank::Rotate(int rot)
     switch (rot)
     {
     case Rotation::LEFT:
-//        cannon->setRotation(90);
         cannon->setRect(0, 0, CELL * 2, CELL * 1);
         cannon->setPos(-1 * CELL, 1 * CELL);
         rotation = Rotation::LEFT;
         break;
     case Rotation::UP:
-//        cannon->setRotation(180);
         cannon->setRect(0, 0, CELL * 1, CELL * 2);
         cannon->setPos(1 * CELL, -1 * CELL);
         rotation = Rotation::UP;
         break;
     case Rotation::RIGHT:
-//        cannon->setRotation(270);
         cannon->setRect(0, 0, CELL * 2, CELL * 1);
         cannon->setPos(2 * CELL, 1 * CELL);
         rotation = Rotation::RIGHT;
 
         break;
     case Rotation::DOWN:
-//        cannon->setRotation(0);
         cannon->setRect(0, 0, CELL * 1, CELL * 2);
         cannon->setPos(1 * CELL, 2 * CELL);
         rotation = Rotation::DOWN;
@@ -124,11 +129,6 @@ QPointF Tank::bulletStartPos()
         break;
     }
     return currBodyPos;
-}
-
-void Tank::Update()
-{
-    this->UpdateAttack();
 }
 
 bool Tank::CanAttack() const

@@ -13,15 +13,22 @@ class Bullet : public QWidget
 {
     Q_OBJECT
 public:
+
     Bullet(QPointF startPos, QGraphicsScene *scene, int speed, int rotation = Rotation::STOP, QWidget *parent = nullptr);
-    void Move(int step = CELL);
+
 private:
+//    elements
     QGraphicsEllipseItem* body;
     QGraphicsScene* parentScene;
+//    variables
     int size;
     int rotation;
     int speed;
+
     QTimer* moveTimer;
+//    functions
+    void Move(int step = CELL);
+
 private slots:
     void moveTimerEvent();
 
