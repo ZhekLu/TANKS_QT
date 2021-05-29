@@ -24,14 +24,18 @@ public:
     ~MainScene();
     Tank *tank;
 private:
+//    elements
     QHBoxLayout* sceneLayout;
     QGraphicsView* sceneWidget;
     QGraphicsScene* scene;
-    QTimer* tankTimer;
-
+    QTimer* updateTimer;
+//    moving events
     void keyPressEvent(QKeyEvent*) override;
     void keyReleaseEvent(QKeyEvent*) override;
     QMap<int, bool> keys;
+//    fuctions
+    void updateBulletsCollision();
+    void updateTanksCollision();
 
 protected:
 
@@ -42,7 +46,7 @@ protected:
 */
 
 private slots:
-   void tankTimerSlot();
+   void updateTimerSlot();
 
 };
 

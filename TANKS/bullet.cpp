@@ -1,6 +1,6 @@
 #include "bullet.h"
 
-Bullet::Bullet(QPointF startpos, QGraphicsScene *scene, int speed, int rotation, QWidget *parent)
+Bullet::Bullet(const QPointF &startpos, QGraphicsScene *scene, int speed, int rotation, QWidget *parent)
     : QWidget(parent)
 {
 //    variables
@@ -21,6 +21,33 @@ Bullet::Bullet(QPointF startpos, QGraphicsScene *scene, int speed, int rotation,
     moveTimer = new QTimer(this);
     moveTimer->start(5);
     connect(moveTimer, SIGNAL(timeout()), this, SLOT(moveTimerEvent()));
+}
+
+Bullet::~Bullet()
+{
+    parentScene->removeItem(body);
+    delete body;
+    delete moveTimer;
+}
+
+QPointF Bullet::UpRightPos() const
+{
+    return body->pos();
+}
+
+QPointF Bullet::DownLeftPos() const
+{
+    return QPointF(body->pos().x() + size, body->pos().y() + size);
+}
+
+void Bullet::setPos(int ax, int ay)
+{
+    body->setPos(ax, ay);
+}
+
+void Bullet::setPos(const QPointF &pos)
+{
+    body->setPos(pos);
 }
 
 void Bullet::Move(int step)

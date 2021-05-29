@@ -13,9 +13,13 @@ class Bullet : public QWidget
 {
     Q_OBJECT
 public:
-
-    Bullet(QPointF startPos, QGraphicsScene *scene, int speed, int rotation = Rotation::STOP, QWidget *parent = nullptr);
-
+    ~Bullet();
+    Bullet(const QPointF &startPos, QGraphicsScene *scene, int speed, int rotation = Rotation::STOP, QWidget *parent = nullptr);
+//    functions
+    QPointF UpRightPos() const;
+    QPointF DownLeftPos() const;
+    void setPos(int ax, int ay);
+    void setPos(const QPointF &pos);
 private:
 //    elements
     QGraphicsEllipseItem* body;

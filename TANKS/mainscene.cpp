@@ -5,7 +5,7 @@ MainScene::MainScene(QWidget *parent) : QWidget(parent)
     sceneLayout = new QHBoxLayout(this);
     sceneWidget = new QGraphicsView;
 
-    scene = new QGraphicsScene(0, 0, 600, 560, sceneWidget);
+    scene = new QGraphicsScene(0, 0, WIDTH, HEIGHT, sceneWidget);
     scene->addRect(scene->sceneRect());
     sceneWidget->setScene(scene);
 
@@ -14,9 +14,9 @@ MainScene::MainScene(QWidget *parent) : QWidget(parent)
     sceneLayout->addWidget(sceneWidget);
     setLayout(sceneLayout);
 
-    tankTimer = new QTimer(this);
-    tankTimer->start(10);
-    connect(tankTimer, SIGNAL(timeout()), this, SLOT(tankTimerSlot()));
+    updateTimer = new QTimer(this);
+    updateTimer->start(5);
+    connect(updateTimer, SIGNAL(timeout()), this, SLOT(updateTimerSlot()));
 
 
 /*
@@ -32,7 +32,7 @@ MainScene::~MainScene()
     delete scene;
     delete sceneWidget;
     delete sceneLayout;
-    delete tankTimer;
+    delete updateTimer;
 }
 
 void MainScene::keyPressEvent(QKeyEvent *e)
@@ -71,10 +71,31 @@ void MainScene::keyReleaseEvent(QKeyEvent *e)
     QWidget::keyReleaseEvent(e);
 }
 
-void MainScene::tankTimerSlot()
+void MainScene::updateBulletsCollision()
 {
-//    static unsigned short int x = 65000;
-//    qDebug() << x++;
+//    with walls
+    int counter = 0;
+    for(auto *bullet : tank->bullets)
+    {
+        if(bullet->UpRightPos().x() < 0 || bullet->UpRightPos().y() < 0 ||
+                bullet->DownLeftPos().x() > WIDTH || bullet->DownLeftPos().y() > HEIGHT)
+        {
+            delete bullet; // delete(tank->bullets.at(counter));
+            tank->bullets.erase(tank->bullets.begin() + counter);
+        }
+        counter++;
+    }
+}
+
+void MainScene::updateTanksCollision()
+{
+
+}
+
+void MainScene::updateTimerSlot()
+{
+    this->updateBulletsCollision();
+    this->updateTanksCollision();
 }
 
 /*
