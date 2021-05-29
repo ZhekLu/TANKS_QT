@@ -41,8 +41,8 @@ Tank::~Tank()
         bullets.pop_front();
     }
     parentScene->removeItem(body);
-    delete body;
     delete cannon;
+    delete body;
     delete attackTimer;
 }
 

@@ -21,6 +21,7 @@ class MainScene : public QWidget
     Q_OBJECT
 public:
     MainScene(QWidget *parent = nullptr);
+    ~MainScene();
     Tank *tank;
 private:
     QHBoxLayout* sceneLayout;
@@ -34,9 +35,11 @@ private:
 
 protected:
 
-//    bool eventFilter(QObject *obj, QEvent *event) override;
-//    bool upKey, downKey, rightKey, leftKey, fireKey;
-//    void updateKeys();
+/*
+ * bool eventFilter(QObject *obj, QEvent *event) override;
+ * bool upKey, downKey, rightKey, leftKey, fireKey;
+ * void updateKeys();
+*/
 
 private slots:
    void tankTimerSlot();

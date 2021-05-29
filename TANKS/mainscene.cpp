@@ -26,6 +26,15 @@ MainScene::MainScene(QWidget *parent) : QWidget(parent)
 */
 }
 
+MainScene::~MainScene()
+{
+    delete tank;
+    delete scene;
+    delete sceneWidget;
+    delete sceneLayout;
+    delete tankTimer;
+}
+
 void MainScene::keyPressEvent(QKeyEvent *e)
 {
     short speed = 2;
