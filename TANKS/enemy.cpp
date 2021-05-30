@@ -116,6 +116,11 @@ void Enemy::setPos(int ax, int ay)
     body->setPos(ax, ay);
 }
 
+void Enemy::CanMove(bool value)
+{
+    canMove = value;
+}
+
 void Enemy::Move(int step)
 {
     QPointF currBodyPos = body->pos();
@@ -158,8 +163,13 @@ QMap<int, QImage> const Enemy::imageMap = initImageMap();
 
 void Enemy::moveTimerEvent()
 {
-    if(canMove)
-        this->Move(speed);
+    if(!canMove)
+    {
+       rotation = QRandomGenerator::global()->bounded(0, 4);
+       canMove = true;
+    }
+    this->Rotate(rotation);
+    this->Move(speed);
 }
 
 void Enemy::attackTimerEvent()

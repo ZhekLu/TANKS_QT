@@ -10,8 +10,8 @@
 #include <QPixmap>
 #include <QImage>
 #include <QMap>
+#include <QRandomGenerator>
 #include <QGraphicsPixmapItem>
-
 //#include <QDir>
 #include "definecells.h"
 #include"bullet.h"
@@ -31,8 +31,10 @@ public:
     QPointF DownLeftPos() const;
     QPointF bulletStartPos();
     void setPos(int ax, int ay);
+    void CanMove(bool value);
+
 private:
-//    elements
+    //    elements
     QGraphicsPixmapItem* body;
     QGraphicsScene* parentScene;
 
