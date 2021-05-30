@@ -1,33 +1,49 @@
-#include "enemytank.h"
+#include "enemy.h"
 
-
-EnemyTank::EnemyTank(int x, int y, QGraphicsScene *scene, int speed, int rotation)
+Enemy::Enemy(const QPointF &startpos, QGraphicsScene *scene, int speed, int rotation, QWidget *parent)
+    : QWidget(parent)
 {
 //    variables
-    this->canMove = false;
+    size = 4 * CELL;
+    canMove = true;
     this->rotation = rotation;
+    parentScene = scene;
     this->speed = speed;
+
 //    body
     this->body = new QGraphicsPixmapItem(QPixmap::fromImage(imageMap[rotation]));
-    body->setPos(x, y);
+//    body = new QGraphicsPixmapItem(QPixmap::fromImage(QImage("D:\\STUDY\\projects\\CURSACH\\TANKS\\resources\\enemyTank40pxLEFT.png")));
+    body->setPos(startpos);
+
     scene->addItem(body);
-//    moveTimer
+
+//    timer
     moveTimer = new QTimer(this);
-    moveTimer->start(1000/100);
-    connect(moveTimer, SIGNAL(timeout()), this, SLOT(moveTimerSlot()));
+    moveTimer->start(5);
+    connect(moveTimer, SIGNAL(timeout()), this, SLOT(moveTimerEvent()));
 }
 
-void EnemyTank::Rotate(int rotation)
+Enemy::~Enemy()
 {
-    this->rotation = rotation;
-    body->setPixmap(QPixmap::fromImage(imageMap[rotation]));
+    parentScene->removeItem(body);
+    delete body;
+    delete moveTimer;
 }
 
-void EnemyTank::Move(int step)
+QPointF Enemy::UpRightPos() const
+{
+    return body->pos();
+}
+
+QPointF Enemy::DownLeftPos() const
+{
+    return QPointF(body->pos().x() + size, body->pos().y() + size);
+}
+
+void Enemy::Move(int step)
 {
     QPointF currPos = body->pos();
-    switch (rotation)
-    {
+    switch (rotation) {
     case Rotation::LEFT:
         currPos.rx() -= step;
         break;
@@ -44,7 +60,14 @@ void EnemyTank::Move(int step)
     body->setPos(currPos);
 }
 
-QMap<int, QImage> EnemyTank::initImageMap()
+void Enemy::Rotate(int rotation)
+{
+    this->rotation = rotation;
+    body->setPixmap(QPixmap::fromImage(imageMap[rotation]));
+
+}
+
+QMap<int, QImage> Enemy::initImageMap()
 {
     QMap<int, QImage> tempMap;
     tempMap [Rotation::LEFT] = QImage("D:\\STUDY\\projects\\CURSACH\\TANKS\\resources\\enemyTank40pxLEFT.png");
@@ -52,12 +75,11 @@ QMap<int, QImage> EnemyTank::initImageMap()
     tempMap [Rotation::RIGHT] = QImage("D:\\STUDY\\projects\\CURSACH\\TANKS\\resources\\enemyTank40pxRIGHT.png");
     tempMap [Rotation::DOWN] = QImage("D:\\STUDY\\projects\\CURSACH\\TANKS\\resources\\enemyTank40pxDOWN.png");
     return tempMap;
-}
 
-void EnemyTank::moveTimerSlot()
+}
+QMap<int, QImage> const Enemy::imageMap = initImageMap();
+
+void Enemy::moveTimerEvent()
 {
-
+    this->Move(speed);
 }
-
-QMap<int, QImage> const EnemyTank::imageMap = initImageMap();
-
