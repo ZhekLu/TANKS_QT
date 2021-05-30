@@ -4,12 +4,15 @@ MainScene::MainScene(QWidget *parent) : QWidget(parent)
 {
     sceneLayout = new QHBoxLayout(this);
     sceneWidget = new QGraphicsView;
-
+    this->setStyleSheet("background-color: black;");
     scene = new QGraphicsScene(0, 0, WIDTH, HEIGHT, sceneWidget);
     scene->addRect(scene->sceneRect());
     sceneWidget->setScene(scene);
 
     tank = new Tank(0, 0, scene, Rotation::DOWN);
+
+    Enemy* enemy = new Enemy(QPointF(100, 100), scene, 1, Rotation::RIGHT);
+    enemies.push_back(enemy);
 
     sceneLayout->addWidget(sceneWidget);
     setLayout(sceneLayout);
@@ -18,12 +21,15 @@ MainScene::MainScene(QWidget *parent) : QWidget(parent)
     updateTimer->start(5);
     connect(updateTimer, SIGNAL(timeout()), this, SLOT(updateTimerSlot()));
 
-
 /*
- *    try fix moving with help of filters
- *    installEventFilter(this);
- *    upKey = downKey = rightKey = leftKey = fireKey = false;
-*/
+//    style
+    QImage *img = new QImage("D:\\STUDY\\projects\\CURSACH\\TANKS\\resources\\ironBlock");
+    QPixmap *pxmap = new QPixmap(16, 16);
+    pxmap->convertFromImage(*img);
+    scene->addPixmap(*pxmap);
+    */
+
+
 }
 
 MainScene::~MainScene()
@@ -75,6 +81,7 @@ void MainScene::updateBulletsCollision()
 {
 //    with walls
     int counter = 0;
+//    player
     for(auto *bullet : tank->bullets)
     {
         if(bullet->UpRightPos().x() < 0 || bullet->UpRightPos().y() < 0 ||
@@ -85,10 +92,24 @@ void MainScene::updateBulletsCollision()
         }
         counter++;
     }
+//    enemies
+    counter = 0;
+    for(auto *enemy : enemies)
+        for(auto *bullet : enemy->bullets)
+        {
+            if(bullet->UpRightPos().x() < 0 || bullet->UpRightPos().y() < 0 ||
+                    bullet->DownLeftPos().x() > WIDTH || bullet->DownLeftPos().y() > HEIGHT)
+            {
+                delete bullet; // delete(tank->bullets.at(counter));
+                enemy->bullets.erase(enemy->bullets.begin() + counter);
+            }
+            counter++;
+        }
 }
 
-void MainScene::updateTanksCollision()
+void MainScene::updatePlayerMoving()
 {
+//    with walls
     if(tank->DownLeftPos().rx() > WIDTH)
         tank->setPos(WIDTH - tank->getWidth(), tank->UpRightPos().ry());
     if(tank->DownLeftPos().ry() > HEIGHT)
@@ -97,6 +118,41 @@ void MainScene::updateTanksCollision()
         tank->setPos(0 + tank->getWidth() - tank->getBodyLen(), tank->UpRightPos().ry());
     if(tank->UpRightPos().ry() < 0)
         tank->setPos(tank->UpRightPos().rx(), 0 + tank->getHeight() - tank->getBodyLen());
+
+}
+
+void MainScene::UpdateEnemiesMoving()
+{
+//    with walls
+    for(auto *enemy : enemies)
+    {
+        if(enemy->DownLeftPos().rx() > WIDTH)
+        {
+            enemy->setPos(WIDTH - enemy->getWidth(), enemy->UpRightPos().ry());
+            enemy->CanMove(false);
+        }
+        if(enemy->DownLeftPos().ry() > HEIGHT)
+        {
+            enemy->setPos(enemy->UpRightPos().rx(), HEIGHT - enemy->getHeight());
+            enemy->CanMove(false);
+        }
+        if(enemy->UpRightPos().rx() < 0)
+        {
+            enemy->setPos(0, enemy->UpRightPos().ry());
+            enemy->CanMove(false);
+        }
+        if(enemy->UpRightPos().ry() < 0)
+        {
+            enemy->setPos(enemy->UpRightPos().rx(), 0);
+            enemy->CanMove(false);
+        }
+    }
+}
+
+void MainScene::updateTanksCollision()
+{
+    this->updatePlayerMoving();
+    this->UpdateEnemiesMoving();
 }
 
 void MainScene::updateTimerSlot()
@@ -106,6 +162,15 @@ void MainScene::updateTimerSlot()
 }
 
 /*
+ *protected:
+ * bool eventFilter(QObject *obj, QEvent *event) override;
+ * bool upKey, downKey, rightKey, leftKey, fireKey;
+ * void updateKeys();
+ *
+ *    // try fix moving with help of filters
+ *    // in ctor:
+ *    installEventFilter(this);
+ *    upKey = downKey = rightKey = leftKey = fireKey = false;
  * filters fix
 bool MainScene::eventFilter(QObject *obj, QEvent *event)
 {

@@ -8,13 +8,16 @@
 #include <QTimer>
 #include <QHBoxLayout>
 #include <QKeyEvent>
-#include <QMouseEvent>
+#include <QVector>
 #include <QGraphicsRectItem>
 #include <QMap>
 #include <QDebug>
-
+#include <QImage>
+#include <QPixmap>
+#include <QGraphicsPixmapItem>
 #include "tank.h"
 #include "definecells.h"
+#include "enemy.h"
 
 class MainScene : public QWidget
 {
@@ -22,7 +25,9 @@ class MainScene : public QWidget
 public:
     MainScene(QWidget *parent = nullptr);
     ~MainScene();
+protected:
     Tank *tank;
+    QVector<Enemy*> enemies;
 private:
 //    elements
     QHBoxLayout* sceneLayout;
@@ -35,16 +40,9 @@ private:
     QMap<int, bool> keys;
 //    fuctions
     void updateBulletsCollision();
+    void updatePlayerMoving();
+    void UpdateEnemiesMoving();
     void updateTanksCollision();
-
-protected:
-
-/*
- * bool eventFilter(QObject *obj, QEvent *event) override;
- * bool upKey, downKey, rightKey, leftKey, fireKey;
- * void updateKeys();
-*/
-
 private slots:
    void updateTimerSlot();
 
